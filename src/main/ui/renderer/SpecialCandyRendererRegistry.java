@@ -26,6 +26,10 @@ public class SpecialCandyRendererRegistry {
             g.drawRect(x + padding + 5, y + padding + 5, cellSize - 2 * padding - 10, cellSize - 2 * padding - 10);
             g.drawRect(x + padding + 7, y + padding + 7, cellSize - 2 * padding - 14, cellSize - 2 * padding - 14);
         });
+        renderers.put(SpecialType.COLOR_BOMB, (g, x, y, cellSize, padding) -> {
+            g.setColor(Color.BLACK);
+            g.fillOval(x + padding + 5, y + padding + 5, cellSize - 2 * padding - 10, cellSize - 2 * padding - 10);
+        });
     }
 
     public static SpecialCandyRendererRegistry getInstance() {

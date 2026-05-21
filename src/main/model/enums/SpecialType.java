@@ -4,5 +4,6 @@ public enum SpecialType {
     NONE,
     STRIPED_HORIZONTAL,
     STRIPED_VERTICAL,
-    WRAPPED
+    WRAPPED,
+    COLOR_BOMB
 }

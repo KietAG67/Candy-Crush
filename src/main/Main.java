@@ -2,20 +2,27 @@ package main;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import main.logic.BasicGravityLogic;
+import main.logic.BasicMatchLogic;
+import main.logic.BasicSpecialCandyLogic;
+import main.logic.IGravityLogic;
+import main.logic.IMatchLogic;
+import main.logic.ISpecialCandyLogic;
+import main.logic.SelectionController;
 import main.ui.GamePanel;
 
 public class Main {
     public static void main(String[] args) {
+        IMatchLogic matchLogic = new BasicMatchLogic();
+        IGravityLogic gravityLogic = new BasicGravityLogic();
+        ISpecialCandyLogic specialCandyLogic = new BasicSpecialCandyLogic();
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Candy Crush");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            main.logic.IMatchLogic matchLogic = new main.logic.BasicMatchLogic();
-            main.logic.IGravityLogic gravityLogic = new main.logic.BasicGravityLogic();
-            main.logic.ISpecialCandyLogic specialCandyLogic = new main.logic.BasicSpecialCandyLogic();
-
             GameManager gameManager = new GameManager(matchLogic, gravityLogic, specialCandyLogic);
-            main.logic.SelectionController selectionController = new main.logic.SelectionController(gameManager,
+            SelectionController selectionController = new SelectionController(gameManager,
                     gameManager.getBoard());
 
             GamePanel panel = new GamePanel(gameManager, selectionController);
@@ -30,6 +37,7 @@ public class Main {
 
             try {
                 gameManager.start();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

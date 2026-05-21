@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import main.ui.renderer.SpecialCandyRendererRegistry;
 
 public class GamePanel extends JPanel {
     private GameManager gameManager;
@@ -77,7 +78,7 @@ public class GamePanel extends JPanel {
         g.setColor(new Color(255, 255, 255, 100));
         g.fillOval(x + padding + 5, y + padding + 5, 15, 10);
 
-        main.ui.renderer.SpecialCandyRendererRegistry.getInstance().render(candy.getSpecialType(), g, x, y, CELL_SIZE, padding);
+        SpecialCandyRendererRegistry.getInstance().render(candy.getSpecialType(), g, x, y, CELL_SIZE, padding);
     }
 
     private void drawSelector(Graphics g) {
@@ -94,6 +95,30 @@ public class GamePanel extends JPanel {
 
     private void drawScore(Graphics g) {
         g.setColor(Color.WHITE);
-        g.drawString("Score: " + scoreManager.getScore(), 10, 20);
+        g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        main.model.LevelManager lm = main.model.LevelManager.getInstance();
+        g.drawString("Level: " + lm.getCurrentLevel() + " | Moves: " + lm.getMovesLeft(), 10, 20);
+        g.drawString("Score: " + scoreManager.getScore() + " / " + lm.getTargetScore(), 10, 40);
+
+        if (lm.isGameOver()) {
+            if (lm.isGameWon()) {
+                g.setColor(new Color(0, 0, 0, 150));
+                g.fillRect(0, 0, getWidth(), getHeight());
+                g.setColor(Color.GREEN);
+                g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 40));
+                g.drawString("YOU WIN!", getWidth() / 2 - 100, getHeight() / 2);
+            } else {
+                g.setColor(new Color(0, 0, 0, 150));
+                g.fillRect(0, 0, getWidth(), getHeight());
+                g.setColor(Color.RED);
+                g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 40));
+                g.drawString("GAME OVER", getWidth() / 2 - 120, getHeight() / 2);
+            }
+        } else if (lm.isGameWon() && lm.getMovesLeft() > 0) {
+            // Đang trong chế độ Sugar Crush
+            g.setColor(new Color(255, 105, 180)); // Màu hồng nhạt
+            g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 36));
+            g.drawString("SUGAR CRUSH!", getWidth() / 2 - 130, getHeight() / 2);
+        }
     }
 }
