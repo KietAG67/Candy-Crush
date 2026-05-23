@@ -33,4 +33,8 @@ public class AnimationSystem {
     public boolean isAnimating() {
         return !this.animations.isEmpty();
     }
+
+    public List<Animation> getAnimations() {
+        return animations;
+    }
 }

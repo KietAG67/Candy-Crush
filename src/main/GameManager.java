@@ -12,6 +12,7 @@ import main.animation.SwapAnimation;
 import main.animation.FallAnimation;
 import main.state.IGameState;
 import main.state.IdleState;
+import main.logic.ICandyDestroyListener;
 import main.state.SwappingState;
 import main.state.RevertingState;
 import main.state.MatchingState;
@@ -22,7 +23,7 @@ import main.model.LevelManager;
 import javax.swing.Timer;
 import java.util.List;
 
-public class GameManager {
+public class GameManager implements ICandyDestroyListener {
     private final IGameState idleState = new IdleState();
     private final IGameState swappingState = new SwappingState();
     private final IGameState revertingState = new RevertingState();
@@ -148,15 +149,32 @@ public class GameManager {
         setState(swappingState);
     }
 
+    @Override
+    public void onCandyDestroyed(Candy candy) {
+        handleCandyDestruction(candy, false);
+    }
+
+    @Override
+    public void onSecondaryCandyDestroyed(Candy candy) {
+        handleCandyDestruction(candy, true);
+    }
+
+    private void handleCandyDestruction(Candy candy, boolean isLight) {
+        scoreManager.addScore(10);
+        boolean isSpecial = candy.getSpecialType() != main.model.enums.SpecialType.NONE;
+        animationSystem.addAnimation(new main.animation.DestroyAnimation(candy, isSpecial, isLight));
+        
+        if (isSpecial) {
+            specialCandyLogic.activateSpecialCandy(board, candy, this);
+        }
+    }
+
     public void processMatches(List<MatchResult> matches) {
         for (MatchResult match : matches) {
             for (Candy candy : match.getMatchedCandies()) {
                 if (candy != null && board.getCandy(candy.getRow(), candy.getCol()) != null) {
-                    scoreManager.addScore(10);
                     board.setCandy(candy.getRow(), candy.getCol(), null);
-                    if (candy.getSpecialType() != main.model.enums.SpecialType.NONE) {
-                        specialCandyLogic.activateSpecialCandy(board, candy);
-                    }
+                    onCandyDestroyed(candy);
                 }
             }
             Candy spawned = match.getSpawnedCandy();

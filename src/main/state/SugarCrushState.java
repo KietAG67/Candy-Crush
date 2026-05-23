@@ -45,7 +45,7 @@ public class SugarCrushState implements IGameState {
                 
                 ScoreManager.getInstance().addScore(10);
                 
-                manager.getSpecialCandyLogic().activateSpecialCandy(board, randomCandy);
+                manager.getSpecialCandyLogic().activateSpecialCandy(board, randomCandy, manager);
                 board.setCandy(randomCandy.getRow(), randomCandy.getCol(), null);
                 
                 manager.refillAndAnimate();

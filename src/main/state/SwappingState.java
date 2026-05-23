@@ -38,7 +38,7 @@ public class SwappingState implements IGameState {
             bombCandy.setType(targetCandy.getType());
 
             // Kích hoạt nổ quả bom màu ngay lập tức!
-            manager.getSpecialCandyLogic().activateSpecialCandy(manager.getBoard(), bombCandy);
+            manager.getSpecialCandyLogic().activateSpecialCandy(manager.getBoard(), bombCandy, manager);
 
             // Chuyển sang FallingState và gọi refill để rơi kẹo xuống lấp chỗ trống
             manager.refillAndAnimate();

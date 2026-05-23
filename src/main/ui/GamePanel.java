@@ -31,6 +31,7 @@ public class GamePanel extends JPanel {
         setBackground(new Color(40, 40, 40));
         drawBoard(g);
         drawCandies(g);
+        drawAnimations(g);
         drawSelector(g);
         drawScore(g);
     }
@@ -40,9 +41,9 @@ public class GamePanel extends JPanel {
         if (board == null)
             return;
 
-        g.setColor(new Color(60, 60, 60));
         for (int r = 0; r < board.getRows(); r++) {
             for (int c = 0; c < board.getCols(); c++) {
+                g.setColor(new Color(60, 60, 60));
                 g.fillRect(OFFSET_X + c * CELL_SIZE, OFFSET_Y + r * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 g.setColor(new Color(80, 80, 80));
                 g.drawRect(OFFSET_X + c * CELL_SIZE, OFFSET_Y + r * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -90,6 +91,18 @@ public class GamePanel extends JPanel {
             g2d.setStroke(new BasicStroke(3));
             g2d.drawRect(OFFSET_X + c * CELL_SIZE, OFFSET_Y + r * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             g2d.setStroke(new BasicStroke(1));
+        }
+    }
+
+    private void drawAnimations(Graphics g) {
+        if (gameManager.getAnimationSystem() == null) return;
+        
+        // Copy list to avoid ConcurrentModificationException during rendering
+        java.util.List<main.animation.Animation> animations = new java.util.ArrayList<>(gameManager.getAnimationSystem().getAnimations());
+        for (main.animation.Animation anim : animations) {
+            if (anim instanceof main.animation.IParticleEffect) {
+                main.ui.renderer.ParticleRenderer.render((main.animation.IParticleEffect) anim, g, OFFSET_X, OFFSET_Y, CELL_SIZE);
+            }
         }
     }
 
