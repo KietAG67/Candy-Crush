@@ -1,4 +1,8 @@
 *.class
 bin/
-.vscode/
+out/
+target/
+
 .idea/
+.vscode/
+*.iml
